@@ -1,0 +1,50 @@
+---
+title: "MP3: Western Movies Over Time"
+author: "By: Valerie, Sherhbano, Angelica,"
+output: html_document
+---
+
+Western movies have always been a durable and influencing genre in the American film Industry. Other and newer genres have gained popularity in the last decade or so, such as superhero movies or robot flicks. In recent searches, every movie tends to fall into different categories such as action, drama, romance, comedy, and so on. Although, many film critics have stated that the Western genre has repeatedly died or dried out, it is not entirely true. We explored the popularity of this genre within the range of two decades from 1990 to 2015.
+
+
+```{r include =TRUE, message=FALSE , comment=NA,echo =TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mdsr)
+library(RMySQL)
+library(png)
+
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #Western movies between 1990 to 2015
+      AND  production_year >= 1990
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+```{r}
+glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'darkgoldenrod1') +
+labs(title = "Western Films", x ="Production Year", y = "Count")
+graph + theme(
+  panel.background = element_rect(fill = "black", colour = "black", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+
+```
+
+
+In the visual above, it is the representation of the number of movies that were produced from 1990 to 2015. As shown, the production of Western movies fell at its lowest in 1997 and peaked in 2014. One may ask why? Movie trends are similar to fashion trends, they change all the time but eventually lose popularity because a new trend is growing. In 1997, it was a year where action movies were becoming a big thing, it was a good time for families to watch movies like Men In Black and Jurrassic Park together. There were also popular genres like drama and comedy films. 
+
+In 2014, Western movies made a comeback after they were enormously popular in the silent film era (1894-1927). Movie genres change as their audience changes. When compared, two types of Western films from the 1990s and the ones released in the 2010's, we are able to see the difference. The Western films in the 20th century, were often portrayed in the wilderness with a specific setting like a ranch house, isolated fort, a jail or a small town somewhere in the South/Midwest. Now, since it is a new generation, Western movies have changed. These movies that are considered Western films also fall within other genres like comedies and romance. Films that have been recently released tend to have a greater diversity in their films. A great example is Queens & Cowboys: A Straight Year On the Gay Rodeo which would most likely have not been shown in the early 1990's.  
+
