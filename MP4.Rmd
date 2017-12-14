@@ -1,0 +1,59 @@
+---
+title: "Back At It Again With...The Cowboys"
+output: 
+  html_document:
+    code_folding: hide
+ 
+---
+# {.centered}
+![](Desktop/giphy-1.gif)
+
+In the film industry, Drama and Action films that include superheroes and robot flicks, have gained popularity in the last decade . Although these genres never go out of style, there is one genre that many film critics consider a “dead genre”. The Western genre seems to have been a huge hit in the year of 2014. Although, many film critics have stated that the Western genre has lost its audience, we explore the reasons as to why that is not entirely true.
+
+After collecting our data from the IMDb website for the years 2000-2015, our findings showed that many movies usually fit into two or more genres. This was made possible with Hollywood expanding on what they considered western, drama, action, and so on. A good example would be A Million Ways to Die in the West (2014). This film according to IMDb falls into the categories of comedy, romance, and western. Which is interesting to find out because there are many other films that fall into many categories including western that explains why this genre became so popular.
+
+```{r include =TRUE, message=FALSE , comment=NA,echo =TRUE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(mdsr)
+library(RMySQL)
+library(png)
+
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #Western movies between 2000 to 2015
+      AND  production_year >= 2000
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+
+
+```{r fig.align = "center"}
+#glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'pink') +
+labs(title = "Western Films", x ="Production Year", y = "Count")
+graph + theme(
+  panel.background = element_rect(fill = "black", colour = "black", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+
+In the graph above, one is able to see the Western trend as we approach the 2010’s. The highest number of films produced was in 2014. 
+
+Although Western films can fit into multiple genres, the cowboy hat and boots never leave the scene. There are features still present in these films but they have adapted to new liberal ideas such as having more diversity in the cast but still not enough. Western films have long established the idea of cowboys and have been holding onto that idea because it is crucial to the identity of Americans. The Western genre is becoming broader but still needs more work to be done when it comes to diversity.
+
+
+# mp4
